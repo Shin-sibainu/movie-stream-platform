@@ -17,7 +17,7 @@ export default function VideoList({
 }: VideoListProps) {
   return (
     <div className="space-y-4">
-      {sections.map((section) => {
+      {sections.map((section, sectionIndex) => {
         const sectionWatchedCount = section.videos.filter((v) =>
           watchedVideos.has(v.id),
         ).length;
@@ -25,29 +25,33 @@ export default function VideoList({
           section.videos.length > 0
             ? Math.round((sectionWatchedCount / section.videos.length) * 100)
             : 0;
+        const sectionLabel = String(sectionIndex + 1).padStart(2, "0");
 
         return (
           <div
             key={section.id}
-            className="rounded-lg border border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-900"
+            className="rounded-2xl border border-white/10 bg-white/5 p-4"
           >
-            <div className="border-b border-gray-200 px-4 py-3 dark:border-gray-800">
-              <h3 className="mb-1 font-semibold text-gray-900 dark:text-gray-100">
-                {section.name}
-              </h3>
-              <div className="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
-                <span>
-                  {sectionWatchedCount}/{section.videos.length} 完了
-                </span>
-                <div className="flex-1 overflow-hidden rounded-full bg-gray-200 dark:bg-gray-700">
-                  <div
-                    className="h-1.5 bg-blue-600 transition-all dark:bg-blue-500"
-                    style={{ width: `${sectionProgress}%` }}
-                  />
-                </div>
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <div>
+                <p className="text-[10px] uppercase tracking-[0.35em] text-slate-500">
+                  Section {sectionLabel}
+                </p>
+                <h3 className="text-base font-semibold text-white">
+                  {section.name}
+                </h3>
               </div>
+              <span className="text-xs font-semibold text-slate-300">
+                {sectionWatchedCount}/{section.videos.length} 完了
+              </span>
             </div>
-            <ul className="divide-y divide-gray-200 dark:divide-gray-800">
+            <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-white/10">
+              <div
+                className="h-full bg-blue-400 transition-[width] duration-500"
+                style={{ width: `${sectionProgress}%` }}
+              />
+            </div>
+            <ul className="mt-4 space-y-2">
               {section.videos.map((video) => {
                 const isWatched = watchedVideos.has(video.id);
                 const isCurrent = currentVideoId === video.id;
@@ -56,21 +60,50 @@ export default function VideoList({
                   <li key={video.id}>
                     <button
                       onClick={() => onVideoSelect(video.id)}
-                      className={`relative w-full px-4 py-3 text-left text-sm transition-all duration-200 hover:bg-gray-50 dark:hover:bg-gray-800 ${
+                      className={`group w-full rounded-xl border px-3 py-3 text-left text-sm transition-all duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500 ${
                         isCurrent
-                          ? "bg-blue-50 font-semibold text-blue-600 dark:bg-blue-900/20 dark:text-blue-400"
-                          : "text-gray-700 dark:text-gray-300"
+                          ? "border-blue-400/60 bg-blue-500/10 text-white"
+                          : "border-white/5 bg-white/[0.02] text-slate-200 hover:border-white/15 hover:bg-white/5"
                       }`}
                       aria-label={`${video.title}を再生`}
                       aria-current={isCurrent ? "true" : "false"}
                     >
-                      <div className="flex items-start gap-2">
-                        {isWatched && (
-                          <span className="mt-0.5 text-green-600 dark:text-green-400">
-                            ✓
-                          </span>
-                        )}
-                        <span className="flex-1">{video.title}</span>
+                      <div className="flex items-start gap-3">
+                        <span
+                          className={`mt-1 h-2 w-2 rounded-full ${
+                            isCurrent
+                              ? "bg-blue-400"
+                              : isWatched
+                                ? "bg-emerald-400"
+                                : "bg-white/30"
+                          }`}
+                          aria-hidden="true"
+                        />
+                        <div className="flex-1">
+                          <p
+                            className={`font-medium ${
+                              isCurrent ? "text-white" : "text-slate-100"
+                            }`}
+                          >
+                            {video.title}
+                          </p>
+                          {isWatched && !isCurrent && (
+                            <p className="text-xs text-emerald-300/80">
+                              視聴済み
+                            </p>
+                          )}
+                        </div>
+                        <span
+                          className={`text-xs font-semibold ${
+                            isCurrent
+                              ? "text-blue-200"
+                              : isWatched
+                                ? "text-emerald-300"
+                                : "text-slate-400"
+                          }`}
+                        >
+                          {isCurrent ? "再生中" : isWatched ? "完了" : "未視聴"}
+                        </span>
                       </div>
                     </button>
                   </li>

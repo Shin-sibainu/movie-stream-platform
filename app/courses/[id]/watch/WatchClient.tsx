@@ -16,7 +16,7 @@ export default function WatchClient({
   course,
   initialVideoId,
 }: WatchClientProps) {
-  const { markAsWatched, isWatched, getProgress, watchedVideos } =
+  const { markAsWatched, getProgress, watchedVideos } =
     useVideoProgress(course.id);
 
   // 初期動画を設定
@@ -142,60 +142,90 @@ export default function WatchClient({
   }
 
   return (
-    <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-      <div className="lg:col-span-2">
-        {/* コース全体の進捗バー */}
-        <div className="mb-4 rounded-lg border border-gray-200 bg-white p-4 dark:border-gray-800 dark:bg-gray-900">
-          <ProgressBar
-            progress={courseProgress}
-            label="コース全体の進捗"
-            showPercentage={true}
-          />
+    <div className="grid gap-8 lg:grid-cols-[1.6fr_1fr]">
+      <section className="space-y-6">
+        <div className="rounded-3xl border border-white/10 bg-white/5 p-6 shadow-[0_30px_70px_rgba(2,6,23,0.45)]">
+          <div className="flex flex-wrap items-start justify-between gap-4">
+            <div>
+              <p className="text-xs uppercase tracking-[0.4em] text-slate-400">
+                CURRENT LESSON
+              </p>
+              <h2 className="mt-3 text-2xl font-semibold text-white">
+                {currentVideo.title}
+              </h2>
+              {currentVideo.description && (
+                <p className="mt-2 text-sm text-slate-300">
+                  {currentVideo.description}
+                </p>
+              )}
+            </div>
+            <div className="rounded-2xl border border-white/10 px-4 py-3 text-right text-xs uppercase tracking-[0.35em] text-slate-500">
+              PROGRESS
+              <p className="mt-1 text-3xl font-semibold text-white">
+                {courseProgress}%
+              </p>
+            </div>
+          </div>
+
+          <div className="mt-6 overflow-hidden rounded-2xl border border-white/10 bg-black">
+            <VideoPlayer
+              youtubeVideoId={currentVideo.youtubeVideoId}
+              onEnd={handleVideoEnd}
+              onProgress={handleVideoProgress}
+            />
+          </div>
         </div>
 
-        <div className="mb-4">
-          <h2 className="mb-2 text-xl font-semibold text-gray-900 dark:text-gray-100">
-            {currentVideo.title}
-          </h2>
-          {currentVideo.description && (
-            <p className="text-sm text-gray-600 dark:text-gray-400">
-              {currentVideo.description}
-            </p>
+        <div className="rounded-3xl border border-white/10 bg-white/5 p-6">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div className="w-full sm:max-w-md">
+              <ProgressBar
+                progress={courseProgress}
+                label="COURSE COMPLETION"
+                showPercentage
+              />
+            </div>
+            <span className="text-sm text-slate-400">
+              {watchedVideos.size}/{totalVideos} レッスン完了
+            </span>
+          </div>
+
+          {nextVideo && (
+            <div className="mt-6">
+              <button
+                onClick={() => handleVideoSelect(nextVideo.id)}
+                className="flex w-full items-center justify-between rounded-2xl border border-white/10 bg-blue-500/10 px-5 py-4 text-left text-sm font-semibold text-white transition hover:bg-blue-500/20"
+              >
+                <span className="uppercase tracking-[0.3em] text-xs text-slate-200">
+                  Next Lesson
+                </span>
+                <span className="text-base">{nextVideo.title}</span>
+              </button>
+            </div>
           )}
         </div>
+      </section>
 
-        <VideoPlayer
-          youtubeVideoId={currentVideo.youtubeVideoId}
-          onEnd={handleVideoEnd}
-          onProgress={handleVideoProgress}
-        />
-
-        {/* 次の動画ボタン */}
-        {nextVideo && (
-          <div className="mt-4">
-            <button
-              onClick={() => handleVideoSelect(nextVideo.id)}
-              className="w-full rounded-lg bg-blue-600 px-4 py-3 font-semibold text-white transition-colors hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600"
-            >
-              次の動画: {nextVideo.title}
-            </button>
+      <aside>
+        <div className="sticky top-4 space-y-4">
+          <div className="rounded-3xl border border-white/10 bg-white/5 p-5">
+            <div className="mb-4 flex items-center justify-between">
+              <h3 className="text-base font-semibold text-white">
+                コースマップ
+              </h3>
+              <span className="text-xs text-slate-400">
+                {totalVideos} 本の動画
+              </span>
+            </div>
+            <VideoList
+              sections={course.sections}
+              currentVideoId={currentVideo.id}
+              onVideoSelect={handleVideoSelect}
+              watchedVideos={watchedVideos}
+            />
           </div>
-        )}
-      </div>
-
-      <div className="lg:col-span-1">
-        <div className="sticky top-4">
-          <h3 className="mb-4 text-lg font-semibold text-gray-900 dark:text-gray-100">
-            コース内容
-          </h3>
-          <VideoList
-            sections={course.sections}
-            currentVideoId={currentVideo.id}
-            onVideoSelect={handleVideoSelect}
-            watchedVideos={watchedVideos}
-          />
         </div>
-      </div>
+      </aside>
     </div>
   );
 }

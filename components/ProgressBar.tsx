@@ -14,20 +14,18 @@ export default function ProgressBar({
   return (
     <div className="w-full">
       {label && (
-        <div className="mb-2 flex items-center justify-between text-sm">
-          <span className="font-medium text-gray-700 dark:text-gray-300">
-            {label}
-          </span>
+        <div className="mb-3 flex items-center justify-between text-xs uppercase tracking-[0.2em] text-slate-400">
+          <span>{label}</span>
           {showPercentage && (
-            <span className="text-gray-600 dark:text-gray-400">
-              {progress}%
+            <span className="font-semibold text-slate-200">
+              {Math.min(100, Math.max(0, progress))}%
             </span>
           )}
         </div>
       )}
-      <div className="overflow-hidden rounded-full bg-gray-200 dark:bg-gray-700">
+      <div className="h-2 overflow-hidden rounded-full bg-white/10">
         <div
-          className="h-2 bg-blue-600 transition-all duration-300 dark:bg-blue-500"
+          className="h-full rounded-full bg-emerald-400 transition-[width] duration-500"
           style={{ width: `${Math.min(100, Math.max(0, progress))}%` }}
           role="progressbar"
           aria-valuenow={progress}
