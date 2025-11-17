@@ -40,25 +40,27 @@ export default async function WatchPage({
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-950">
-      <header className="border-b border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-900">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
+    <div className="min-h-screen bg-[#030712] text-slate-100">
+      <header className="border-b border-white/10 bg-[#030712]/80 backdrop-blur-sm">
+        <div className="mx-auto max-w-6xl px-6 py-4">
+          <div className="flex flex-wrap items-center justify-between gap-4">
             <Link
               href={`/courses/${id}`}
-              className="text-sm text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100"
+              className="text-sm text-slate-300 transition hover:text-white"
             >
               ← コース詳細に戻る
             </Link>
-            <h1 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+            <h1 className="text-base font-semibold text-white">
               {course.title}
             </h1>
-            <div className="w-24"></div>
+            <span className="text-xs uppercase tracking-[0.3em] text-slate-500">
+              WATCH MODE
+            </span>
           </div>
         </div>
       </header>
 
-      <main className="container mx-auto px-4 py-6">
+      <main className="mx-auto max-w-6xl px-6 py-10">
         <WatchClient course={course} initialVideoId={videoId} />
       </main>
     </div>
