@@ -1,0 +1,153 @@
+[
+  {
+    "id": "1",
+    "title": "Next.js完全入門コース",
+    "description": "Next.js 16の最新機能を学び、モダンなWebアプリケーションを構築する方法を習得します。App Router、サーバーコンポーネント、データフェッチングなど、実践的な内容を網羅しています。",
+    "thumbnailUrl": "https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=800&h=450&fit=crop",
+    "sections": [
+      {
+        "id": "section-1",
+        "name": "イントロダクション",
+        "videos": [
+          {
+            "id": "video-1-1",
+            "title": "Next.jsとは？",
+            "youtubeVideoId": "dQw4w9WgXcQ",
+            "description": "Next.jsの概要と特徴について説明します。"
+          },
+          {
+            "id": "video-1-2",
+            "title": "開発環境のセットアップ",
+            "youtubeVideoId": "dQw4w9WgXcQ",
+            "description": "Next.jsプロジェクトの作成方法を学びます。"
+          }
+        ]
+      },
+      {
+        "id": "section-2",
+        "name": "App Routerの基礎",
+        "videos": [
+          {
+            "id": "video-2-1",
+            "title": "ルーティングの基本",
+            "youtubeVideoId": "dQw4w9WgXcQ",
+            "description": "App Routerでのルーティング方法を学びます。"
+          },
+          {
+            "id": "video-2-2",
+            "title": "動的ルート",
+            "youtubeVideoId": "dQw4w9WgXcQ",
+            "description": "動的ルートの使い方を学びます。"
+          },
+          {
+            "id": "video-2-3",
+            "title": "レイアウトとネスト",
+            "youtubeVideoId": "dQw4w9WgXcQ",
+            "description": "レイアウトの概念とネストについて学びます。"
+          }
+        ]
+      },
+      {
+        "id": "section-3",
+        "name": "データフェッチング",
+        "videos": [
+          {
+            "id": "video-3-1",
+            "title": "サーバーコンポーネントでのデータ取得",
+            "youtubeVideoId": "dQw4w9WgXcQ",
+            "description": "サーバーコンポーネントでデータを取得する方法を学びます。"
+          },
+          {
+            "id": "video-3-2",
+            "title": "キャッシュ戦略",
+            "youtubeVideoId": "dQw4w9WgXcQ",
+            "description": "Next.jsのキャッシュ機能について学びます。"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "2",
+    "title": "TypeScript実践講座",
+    "description": "TypeScriptの基礎から応用まで、実践的なコード例を通じて学習します。型安全性を活かした開発手法を身につけましょう。",
+    "thumbnailUrl": "https://images.unsplash.com/photo-1516116216624-53e697fedbea?w=800&h=450&fit=crop",
+    "sections": [
+      {
+        "id": "section-1",
+        "name": "TypeScriptの基礎",
+        "videos": [
+          {
+            "id": "video-1-1",
+            "title": "TypeScriptとは？",
+            "youtubeVideoId": "dQw4w9WgXcQ",
+            "description": "TypeScriptの概要とJavaScriptとの違いについて説明します。"
+          },
+          {
+            "id": "video-1-2",
+            "title": "基本的な型",
+            "youtubeVideoId": "dQw4w9WgXcQ",
+            "description": "TypeScriptの基本的な型について学びます。"
+          }
+        ]
+      },
+      {
+        "id": "section-2",
+        "name": "高度な型",
+        "videos": [
+          {
+            "id": "video-2-1",
+            "title": "ユニオン型とインターセクション型",
+            "youtubeVideoId": "dQw4w9WgXcQ",
+            "description": "複雑な型の定義方法を学びます。"
+          },
+          {
+            "id": "video-2-2",
+            "title": "ジェネリクス",
+            "youtubeVideoId": "dQw4w9WgXcQ",
+            "description": "ジェネリクスの使い方を学びます。"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "3",
+    "title": "React Hooks完全ガイド",
+    "description": "React Hooksの使い方を基礎から応用まで徹底解説します。useState、useEffect、カスタムフックなど、実践的な使い方を学びます。",
+    "thumbnailUrl": "https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=800&h=450&fit=crop",
+    "sections": [
+      {
+        "id": "section-1",
+        "name": "基本的なHooks",
+        "videos": [
+          {
+            "id": "video-1-1",
+            "title": "useStateの使い方",
+            "youtubeVideoId": "dQw4w9WgXcQ",
+            "description": "useStateフックの基本的な使い方を学びます。"
+          },
+          {
+            "id": "video-1-2",
+            "title": "useEffectの使い方",
+            "youtubeVideoId": "dQw4w9WgXcQ",
+            "description": "useEffectフックで副作用を管理する方法を学びます。"
+          }
+        ]
+      },
+      {
+        "id": "section-2",
+        "name": "カスタムフック",
+        "videos": [
+          {
+            "id": "video-2-1",
+            "title": "カスタムフックの作成",
+            "youtubeVideoId": "dQw4w9WgXcQ",
+            "description": "再利用可能なカスタムフックを作成する方法を学びます。"
+          }
+        ]
+      }
+    ]
+  }
+]
+

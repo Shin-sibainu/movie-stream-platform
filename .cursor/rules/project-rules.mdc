@@ -1,0 +1,255 @@
+---
+alwaysApply: true
+---
+
+# プロジェクトルール
+
+## 1. 実装前のドキュメント確認
+
+**重要**: 実装を始める前に、必ず`docs`ディレクトリ配下のドキュメントを確認してください。
+
+### 確認すべきドキュメント
+
+- **`docs/requirements.md`**: 要件定義書を確認し、実装すべき機能を理解する
+- **`docs/progress.md`**: 進捗管理ファイルを確認し、現在のタスクと進捗状況を把握する
+- **`docs/tech-stack.md`**: 技術スタックを確認し、使用する技術やライブラリを理解する
+- **`docs/README.md`**: プロジェクト全体の概要を確認する
+
+### 実装フロー
+
+1. 実装する機能を決定
+2. `docs/requirements.md`で該当機能の要件を確認
+3. `docs/tech-stack.md`で使用する技術を確認
+4. 実装開始
+5. 実装完了後、`docs/progress.md`を更新
+
+---
+
+## 2. Next.js 16.0.3 ベストプラクティス（キャッシュコンポーネント有効化なし）
+
+本プロジェクトでは**Next.js 16.0.3**を使用し、**キャッシュコンポーネント機能は有効化していません**。
+
+### App Router の使用
+
+- **App Router**を使用します（`app`ディレクトリ）
+- Pages Router（`pages`ディレクトリ）は使用しません
+
+### ファイル構造
+
+```
+app/
+├── layout.tsx          # ルートレイアウト
+├── page.tsx            # トップページ
+├── courses/
+│   ├── layout.tsx      # コース関連のレイアウト
+│   ├── page.tsx        # コース一覧ページ
+│   └── [id]/
+│       ├── page.tsx    # コース詳細ページ
+│       └── watch/
+│           └── page.tsx # 動画視聴ページ
+└── components/         # 再利用可能なコンポーネント
+```
+
+### サーバーコンポーネントとクライアントコンポーネント
+
+- **デフォルトはサーバーコンポーネント**として実装
+- インタラクティブな機能（useState、useEffect、イベントハンドラなど）が必要な場合のみ`'use client'`ディレクティブを使用
+
+```typescript
+// サーバーコンポーネント（デフォルト）
+export default function CourseList() {
+  // サーバーサイドでデータを取得
+  return <div>...</div>;
+}
+
+// クライアントコンポーネント（必要時のみ）
+("use client");
+
+import { useState } from "react";
+
+export default function VideoPlayer() {
+  const [isPlaying, setIsPlaying] = useState(false);
+  // ...
+}
+```
+
+### データフェッチング
+
+- **サーバーコンポーネント**でデータをフェッチ
+- `fetch`を使用する場合、キャッシュの挙動を明示的に指定
+
+```typescript
+// 静的データ（ビルド時に生成）
+async function getCourses() {
+  const res = await fetch("https://api.example.com/courses", {
+    cache: "force-cache", // または 'no-store' で動的
+  });
+  return res.json();
+}
+
+// 動的データ（リクエストごとに取得）
+async function getCourse(id: string) {
+  const res = await fetch(`https://api.example.com/courses/${id}`, {
+    cache: "no-store",
+  });
+  return res.json();
+}
+```
+
+### ルーティング
+
+- **動的ルート**: `[id]`や`[...slug]`を使用
+- **ルートグループ**: `(group)`を使用してレイアウトを整理（URL には影響しない）
+
+```typescript
+// app/courses/[id]/page.tsx
+export default async function CourseDetailPage({
+  params,
+}: {
+  params: { id: string };
+}) {
+  const course = await getCourse(params.id);
+  return <div>...</div>;
+}
+```
+
+### メタデータ
+
+- `metadata`オブジェクトまたは`generateMetadata`関数を使用して SEO 対応
+
+```typescript
+export const metadata = {
+  title: "コース一覧",
+  description: "利用可能なコース一覧",
+};
+
+// または動的メタデータ
+export async function generateMetadata({ params }: { params: { id: string } }) {
+  const course = await getCourse(params.id);
+  return {
+    title: course.title,
+    description: course.description,
+  };
+}
+```
+
+### ローディングとエラーハンドリング
+
+- `loading.tsx`: ローディング状態を表示
+- `error.tsx`: エラー状態を表示
+- `not-found.tsx`: 404 ページを表示
+
+```typescript
+// app/courses/loading.tsx
+export default function Loading() {
+  return <div>読み込み中...</div>;
+}
+
+// app/courses/error.tsx
+("use client");
+
+export default function Error({
+  error,
+  reset,
+}: {
+  error: Error;
+  reset: () => void;
+}) {
+  return (
+    <div>
+      <h2>エラーが発生しました</h2>
+      <button onClick={reset}>再試行</button>
+    </div>
+  );
+}
+```
+
+### パフォーマンス最適化
+
+- **画像最適化**: `next/image`コンポーネントを使用
+- **フォント最適化**: `next/font`を使用
+- **動的インポート**: 必要に応じて`dynamic`を使用してコンポーネントを遅延読み込み
+
+```typescript
+import Image from "next/image";
+import { Inter } from "next/font/google";
+import dynamic from "next/dynamic";
+
+const HeavyComponent = dynamic(() => import("./HeavyComponent"), {
+  loading: () => <p>読み込み中...</p>,
+});
+```
+
+### TypeScript の使用
+
+- すべてのファイルは TypeScript（`.tsx`または`.ts`）で記述
+- 型定義を適切に使用し、`any`は避ける
+
+```typescript
+// 型定義の例
+interface Course {
+  id: string;
+  title: string;
+  description: string;
+  thumbnailUrl: string;
+  sections: Section[];
+}
+```
+
+### 環境変数
+
+- `.env.local`に環境変数を定義
+- クライアント側で使用する場合は`NEXT_PUBLIC_`プレフィックスを付ける
+
+```bash
+# .env.local
+NEXT_PUBLIC_API_URL=https://api.example.com
+DATABASE_URL=postgresql://...
+```
+
+### コードスタイル
+
+- **ESLint**: Next.js のデフォルト設定を使用
+- **Prettier**: コードフォーマットを統一
+- **命名規則**:
+  - コンポーネント: PascalCase（例: `CourseCard.tsx`）
+  - ファイル: kebab-case または PascalCase（例: `course-card.tsx`または`CourseCard.tsx`）
+  - 関数・変数: camelCase（例: `getCourseData`）
+
+---
+
+## 3. その他のルール
+
+### コンポーネント設計
+
+- **単一責任の原則**: 各コンポーネントは 1 つの責任を持つ
+- **再利用性**: 再利用可能なコンポーネントは`components`ディレクトリに配置
+- **プロップス**: 必要なプロップスのみを受け取る
+
+### 状態管理
+
+- **サーバー状態**: サーバーコンポーネントで取得したデータはプロップスとして渡す
+- **クライアント状態**: `useState`、`useReducer`、または Zustand を使用
+- **グローバル状態**: 必要最小限に抑える
+
+### エラーハンドリング
+
+- 適切なエラーバウンダリを実装
+- ユーザーフレンドリーなエラーメッセージを表示
+- エラーログを記録（開発環境ではコンソール、本番環境では適切なログサービス）
+
+### アクセシビリティ
+
+- セマンティック HTML を使用
+- `aria-label`や`aria-describedby`を適切に使用
+- キーボードナビゲーションをサポート
+- コントラスト比を考慮
+
+---
+
+## 4. 開発時の注意事項
+
+- 実装前に`docs`ディレクトリのドキュメントを必ず確認
+- 実装後は`docs/progress.md`を更新
+- コミット前に ESLint と Prettier を実行
+- プルリクエスト前に動作確認を実施
